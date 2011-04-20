@@ -27,9 +27,13 @@ extern void register_property(void);
 extern void register_server(void);
 extern void register_tasks(void);
 extern void register_verbs(void);
+extern void register_files(void); /*FUP related. 2011.04.20. STH*/
 
 /* 
  * $Log: bf_register.h,v $
+ *
+ * Added in FUP related info. 2011.04.20 STH
+ *
  * Revision 1.2  1998/12/14 13:17:29  nop
  * Merge UNSAFE_OPTS (ref fixups); fix Log tag placement to fit CVS whims
  *
