@@ -1095,6 +1095,36 @@ bf_encode_binary(Var arglist, Byte next, void *vdata, Objid progr)
 	return make_error_pack(E_INVARG);
 }
 
+/*allow for using chr() in moos. IB patch. March 2008*/
+static package
+bf_chr(Var arglist, Byte next, void *vdata, Objid progr)
+{
+    static Stream *s = 0;
+    Var p, r;
+    const char *bytes;
+    package ret;
+
+    if (!s)
+	s = new_stream(10);
+
+    r = arglist.v.list[1];
+    if (!is_wizard(progr)){
+        ret = make_error_pack(E_PERM);
+    } else if ((r.type == TYPE_INT) && (r.v.num > 0) && (r.v.num <= 256)){
+        stream_add_char(s, (char) r.v.num);
+        /* reset stream terminates our string */
+        bytes = reset_stream(s);
+        p.type = TYPE_STR;
+        p.v.str = str_dup(bytes);
+        ret = make_var_pack(p);
+    } else {
+        ret = make_error_pack(E_INVARG);
+    }
+    free_var(arglist);
+    return ret;
+}
+/*end IB chr() patch*/
+
 void
 register_list(void)
 {
@@ -1105,6 +1135,7 @@ register_list(void)
     register_function("decode_binary", 1, 2, bf_decode_binary,
 		      TYPE_STR, TYPE_ANY);
     register_function("encode_binary", 0, -1, bf_encode_binary);
+    register_function("chr", 1, 1, bf_chr, TYPE_INT);/*chr() IB patch. March 2008*/
     /* list */
     register_function("length", 1, 1, bf_length, TYPE_ANY);
     register_function("setadd", 2, 2, bf_setadd, TYPE_LIST, TYPE_ANY);
@@ -1138,6 +1169,8 @@ register_list(void)
 char rcsid_list[] = "$Id: list.c,v 1.5 1998/12/14 13:17:57 nop Exp $";
 
 /* 
+ * IB chr() patch   2008/03/02 thx GFH.
+ *
  * $Log: list.c,v $
  * Revision 1.5  1998/12/14 13:17:57  nop
  * Merge UNSAFE_OPTS (ref fixups); fix Log tag placement to fit CVS whims
