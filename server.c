@@ -1740,6 +1740,9 @@ char rcsid_server[] = "$Id: server.c,v 1.5 1998/12/29 06:56:32 nop Exp $";
 
 /* 
  * $Log: server.c,v $
+ *
+ * FUP related changes. 2011.04.20. STH
+ *
  * Revision 1.5  1998/12/29 06:56:32  nop
  * Fixed leak in onc().
  *
