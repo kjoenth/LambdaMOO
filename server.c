@@ -1220,6 +1220,7 @@ main(int argc, char **argv)
     }
     oklog("STARTING: Version %s of the LambdaMOO server\n", server_version);
     oklog("          (Using %s protocol)\n", network_protocol_name());
+    oklog("          (Using File Utilities Package version %s)\n", FUP_version);/*FUP related. 2011.04.20. STH*/
     oklog("          (Task timeouts measured in %s seconds.)\n",
 	  virtual_timer_available()? "server CPU" : "wall-clock");
 
