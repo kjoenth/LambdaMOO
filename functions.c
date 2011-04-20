@@ -46,6 +46,7 @@ static registry bi_function_registries[] =
     register_disassemble,
     register_extensions,
     register_execute,
+    register_files, /* Added in FUP related info. 2011.04.20 STH*/
     register_functions,
     register_list,
     register_log,
@@ -458,6 +459,9 @@ char rcsid_functions[] = "$Id: functions.c,v 1.5 1998/12/14 13:17:53 nop Exp $";
 
 /* 
  * $Log: functions.c,v $
+ *
+ * Added in FUP related info. 2011.04.20 STH
+ *
  * Revision 1.5  1998/12/14 13:17:53  nop
  * Merge UNSAFE_OPTS (ref fixups); fix Log tag placement to fit CVS whims
  *
