@@ -40,6 +40,7 @@
 #include "config.h"
 #include "version.h"
 
+const char     *FUP_version = "1.9";/*FUP related change. 2011.04.20. STH*/
 const char *server_version = "1.8.1";
 
 int
