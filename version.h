@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+extern const char     *FUP_version; /*FUP related change. 2011.04.20. STH*/
 extern const char *server_version;
 
 /* The following list must never be reordered, only appended to.  There is one
