@@ -1,0 +1,64 @@
+Version 1.1: (Aug 1994)
+- First released version.
+
+Version 1.2: (Sep 4th, 1994)
+- Added fileversion()
+- Changed filedelete(), filewrite() and fileappend() to return 1 if successful
+- Added the EXTERN_FILES_DIR_READ_ONLY compiling variable
+- Fixed a bug in filegrep() that caused a match in the last line to return
+  a 'zombie' additional line.
+
+Version 1.3: (Sep 8th, 1994)
+- Added filerename()
+- Fixed some serious memory leaks
+(Sep 13th, 1994) - Fixed a bug whereby fileexists always returned 1
+
+Version 1.4 (Jan 5th, 1995)
+- Added the following built-in functions:
+	filechmod()
+	fileerror()
+	fileinfo()
+	filemkdir()
+	filermdir()
+- Added the following compiling variable:
+	CREATE_NEW_DIR_MODE
+- Improved efficiency and file access security management
+- Removed the hard-coded requirement for wizard permissions
+
+Version 1.5 (Jan 9th, 1995)
+- Modified an internal data handling method that was incompatible with Pavel's
+  code, and was potentially database-corrupting
+- Added the following compiling variable:
+        EXTERN_BIN_DIR
+- Added the following built-in function:
+        filerun()
+
+Version 1.6 (Feb 21th, 1995)
+- Fixed some serious bugs in string length handling
+- Added some missing code to filerun() and filechmod()
+- Added the following compiling variable:
+        INCLUDE_FILERUN
+
+Version 1.7 (Sep 30th, 1995)
+- Reorganised the internal name handling methods.
+- Adapted for working with LambdaMOO 1.7.9alpha1. [Note - this version works with LambdaMOO 1.7.8p4]
+- Fixed some portability problems.
+- Fixed an error that made the 'files' directory unprotected for writing.
+- Added the following compiling variable:
+        INCLUDE_FILECHMOD
+
+Version 1.8 (Feb 15th, 1996)
+- Fixed some portability problems.
+- Adapted for MOO versions 1.7.8p4, 1.7.9p2 and 1.8.0b2.
+
+Version 1.8.1 (Jan 27th, 2001)
+- Fixed an omission about version.h needed for compilation
+- Added the following built-in function:
+        fileinsert()
+
+Version 1.9 (Aug 29th, 2002)
+- Fixed a bug in fileinsert concerning the arguments passed.
+- Increase of buffer length for arguments passed if needed.
+- Added the following built0in function:
+	filecut()
+- Successfully Tested for 1.8.1 server version of Lambda.

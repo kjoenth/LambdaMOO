@@ -1,0 +1,136 @@
+" *****************************************************************************
+"  Copyright (c) 1994 Weizmann Institute. See the enclosed copyright notice.
+"  This file includes the code for a simple wrapper for the File Utilities
+"  Package version 1.3, developed and written by Jaime Prilusky and Gustavo
+"  Glusman, Weizmann Institute of Science, Israel.
+"  For questions, suggestions and comments, please  send email to
+"  lsprilus@weizmann.weizmann.ac.il (Jaime Prilusky)
+"  Gustavo@bioinformatics.weizmann.ac.il (Gustavo Glusman)
+" *****************************************************************************
+"This simple file handler doesn't control disk quota.
+"For a child of the $file_handler to work, you need to create a directory under 'files', named tostr(child).
+"E.g.: if you create a child #12345, cd files and mkdir #12345.
+
+@create $thing named generic external file handler:generic external file handler,gefh
+@prop #0.file_handler <the result of the @create>
+@chmod $file_handler rf
+;$file_handler.("description") = "A file handler. Type 'help file_handler' for more information."
+
+@verb $file_handler:"allows" this none this rx
+@program $file_handler:allows
+return $perm_utils:controls(args[1], this);
+"Last modified Wed Aug  3 14:22:16 1994 IDT by Gustavo (#2).";
+.
+
+@verb $file_handler:"write append rename chmod mkdir rmdir insert cut" this none this rx
+@program $file_handler:write
+"WIZARDLY";
+l = length(args);
+if (l < 2)
+  return E_ARGS;
+elseif (!this:allows(caller_perms(), verb, @args))
+  return E_PERM;
+endif
+args[1] = tostr(this)+(args[1] ? "/"+args[1] | "");
+if (verb == "write")
+  result = filewrite(@args);
+elseif (verb == "append")
+  result = fileappend(@args);
+elseif (verb == "rename")
+  result = filerename(@args);
+elseif (verb == "chmod")
+  result = filechmod(@args);
+elseif (verb == "mkdir")
+  result = filemkdir(args[2]);
+elseif (verb == "rmdir")
+  result = filermdir(args[2]);
+elseif (verb == "insert")
+  result = fileinsert(@args);
+elseif (verb == "cut")
+  result = filecut(@args);
+else
+  result = E_VERBNF;
+endif
+return result;
+"Last modified Wed Aug  28 02:43:12 2002 HST by hErVe (#2).";
+.
+
+@verb $file_handler:"read length size exists list grep extract" this none this rx
+@program $file_handler:read
+"WIZARDLY";
+if (!this:allows(caller_perms(), verb, @args))
+  return E_PERM;
+endif
+args[1] = tostr(this)+(args[1] ? "/"+args[1] | "");
+if (verb == "read")
+  return fileread(@args);
+elseif (verb == "length")
+  return filelength(@args);
+elseif (verb == "size")
+  return filesize(@args);
+elseif (verb == "exists")
+  return fileexists(@args);
+elseif (verb == "list")
+  return filelist(@args);
+elseif (verb == "grep")
+  return filegrep(@args);
+elseif (verb == "extract")
+  return fileextract(@args);
+else
+  return E_VERBNF;
+endif
+.
+
+@verb $file_handler:"delete" this none this rx
+@program $file_handler:delete
+"WIZARDLY";
+l = length(args);
+if (!l)
+  return E_ARGS;
+elseif (!this:allows(caller_perms(), verb, @args))
+  return E_PERM;
+endif
+args[1] = tostr(this)+(args[1] ? "/"+args[1] | "");
+return filedelete(@args);
+.
+
+@verb $file_handler:"version error" this none this rx
+@program $file_handler:delete
+"WIZARDLY";
+if (verb == "version")
+  return fileversion();
+elseif (verb == "error")
+  return fileerror();
+endif
+.
+
+"***finished***
+
+
+To protect all the FUP primitives in the database, do the following:
+1) If you don't have a $server_options object in your MOO:
+   a) @create $generic_utils named Server Options
+      [If you don't have a $generic_utils, substitute with $root_class]
+   b) @prop #0.server_options <the object number of the newly created object>
+2) Paste the following lines:
+
+@prop $server_options."protect_fileappend" 1 rc
+@prop $server_options."protect_filechmod" 1 rc
+@prop $server_options."protect_filedelete" 1 rc
+@prop $server_options."protect_fileerror" 1 rc
+@prop $server_options."protect_fileexists" 1 rc
+@prop $server_options."protect_fileextract" 1 rc
+@prop $server_options."protect_filegrep" 1 rc
+@prop $server_options."protect_fileinfo" 1 rc
+@prop $server_options."protect_filelength" 1 rc
+@prop $server_options."protect_filelist" 1 rc
+@prop $server_options."protect_filemkdir" 1 rc
+@prop $server_options."protect_fileread" 1 rc
+@prop $server_options."protect_filerename" 1 rc
+@prop $server_options."protect_filermdir" 1 rc
+@prop $server_options."protect_filesize" 1 rc
+@prop $server_options."protect_filewrite" 1 rc
+@prop $server_options."protect_fileinsert" 1 rc
+@prop $server_options."protect_filecut" 1 rc
+
+If you see any need to protect fileversion(), go ahead... :)
