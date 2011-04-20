@@ -22,11 +22,14 @@ extern long lrand48(void);
 extern void srand48(long);
 #    define RANDOM	lrand48
 #    define SRANDOM	srand48
+#    define RANDOM_MAX	2147483647 /*IB random number patch March 2008*/
 #else
 #  include "my-stdlib.h"
+#  define RANDOM_MAX	RAND_MAX /*IB random number patch March 2008*/
 #  if HAVE_RANDOM
 #    define RANDOM	random
 #    define SRANDOM 	srandom
+#    define RANDOM_MAX	RAND_MAX /*IB random number patch March 2008*/
 #  else
 #    define RANDOM	rand
 #    define SRANDOM	srand
@@ -34,6 +37,8 @@ extern void srand48(long);
 #endif
 
 /* 
+ * IB random number patch. 2008/03/02 thx MDZ
+ *
  * $Log: random.h,v $
  * Revision 1.3  1998/12/14 13:18:53  nop
  * Merge UNSAFE_OPTS (ref fixups); fix Log tag placement to fit CVS whims
