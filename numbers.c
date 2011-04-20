@@ -641,7 +641,7 @@ bf_random(Var arglist, Byte next, void *vdata, Objid progr)
 	if (nargs == 0)
 	    r.v.num = RANDOM();
 	else
-	    r.v.num = RANDOM() % num + 1;
+	    r.v.num = 1 + (int)((double)num * RANDOM() / RANDOM_MAX);/*IB random number patch. March 2008*/
 	return make_var_pack(r);
     }
 }
@@ -710,6 +710,8 @@ register_numbers(void)
 char rcsid_numbers[] = "$Id: numbers.c,v 1.4 1998/12/14 13:18:37 nop Exp $";
 
 /* 
+ * Added in random number patch from IB patch. Thx MDZ.
+ *
  * $Log: numbers.c,v $
  * Revision 1.4  1998/12/14 13:18:37  nop
  * Merge UNSAFE_OPTS (ref fixups); fix Log tag placement to fit CVS whims
