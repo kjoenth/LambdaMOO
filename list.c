@@ -405,6 +405,42 @@ strget(Var str, Var i)
 
 /**** built in functions ****/
 
+/*tolist is added by STH 20100408*/
+static package
+bf_tolist(Var arglist, Byte next, void *vdata, Objid progr)
+{
+    int nargs = arglist.v.list[0].v.num;
+    Stream *brk = new_stream(5);
+    stream_add_string(brk, (nargs > 1) ? arglist.v.list[2].v.str : ",");
+    Var r;
+    
+    if (strcmp(stream_contents(brk), "") == 0) {
+        r = char_list(arglist.v.list[1].v.str);
+    } else {
+        r = new_list(0);
+        int i, l = stream_length(brk);
+        Stream *tmp = new_stream(5);
+        stream_add_string(tmp, arglist.v.list[1].v.str);
+        stream_add_string(tmp, stream_contents(brk));
+        
+        Var subject;
+        subject.type = TYPE_STR;
+        subject.v.str = str_dup(reset_stream(tmp));
+        free_stream(tmp);
+        
+        while (strlen(subject.v.str)) {
+            if ((i = strindex(subject.v.str, stream_contents(brk), 0)) > 1) {
+                r = listappend(r, substr(var_dup(subject), 1, i - 1));
+            }
+            subject = substr(subject, i + l, strlen(subject.v.str));
+        }
+        free_var(subject);
+    }
+    free_var(arglist);
+    free_stream(brk);
+    return make_var_pack(r);
+}
+
 static package
 bf_length(Var arglist, Byte next, void *vdata, Objid progr)
 {
@@ -1163,6 +1199,10 @@ register_list(void)
     register_function("strcmp", 2, 2, bf_strcmp, TYPE_STR, TYPE_STR);
     register_function("strsub", 3, 4, bf_strsub,
 		      TYPE_STR, TYPE_STR, TYPE_STR, TYPE_ANY);
+    
+    /*STH addition 20100408*/
+    register_function("tolist", 1, 2, bf_explode, TYPE_STR, TYPE_STR);
+
 }
 
 
