@@ -44,7 +44,7 @@
 #include "version.h"
 #include <string.h>
 
-/* #define INCLUDE_FILERUN */
+#define INCLUDE_FILERUN
 /* #define INCLUDE_FILECHMOD */
 #define EXTERN_FILES_DIR   "files/"
 #define EXTERN_BIN_DIR     "bin/"
@@ -1153,9 +1153,11 @@ bf_filerun(Var arglist, Byte next, void *vdata, Objid progr)
 { /* (filename, arguments) */
         char theRequestedAction[BUF_LEN];
         Var ret, theArgs, theline;
+        FILE *inPipe; /*STH 11.08.04*/
         int i, numOfArgs, result;
         char fileName[BUF_LEN];
         char external_bin [BUF_LEN];
+        char theBuffer[BUF_LEN]; /*STH 11.08.04*/
 
         theline.type = TYPE_STR;
         theArgs.type = TYPE_LIST;
@@ -1232,12 +1234,26 @@ bf_filerun(Var arglist, Byte next, void *vdata, Objid progr)
 
         sprintf(theRequestedAction,"%s 2>&1", theRequestedAction);
         system(theRequestedAction);
-
-        ret.type = TYPE_INT;
+        /*ret.type = TYPE_INT;
         ret.v.num = 1; /* always !! */
+        /*free_var(arglist);
+        free_var(theline);
+        return make_var_pack(ret);*/
+        /********************************/
+        /***Allows results from the file being executed to be brough into the moo***/
+        /*STH 11.08.04*/
+        ret.type=TYPE_STR;
+        inPipe=popen(theRequestedAction, "r");
+        while (fgets(theBuffer, BUF_LEN, inPipe)!=NULL){
+            theBuffer[strlen(theBuffer)-1] = '\0';
+            ret.v.str=str_dup(theBuffer);
+        }
+        pclose(inPipe);
         free_var(arglist);
         free_var(theline);
         return make_var_pack(ret);
+        /********************************/
+
 }
 #endif
 
